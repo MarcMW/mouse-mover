@@ -1,3 +1,13 @@
+/*
+* ----------------------------------------------------------------------------
+* "THE BEER-WARE LICENSE" (Revision 42):
+* <marc@informaficker.org> wrote this file. As long as you retain this notice you
+* can do whatever you want with this stuff. If we meet some day, and you think
+* this stuff is worth it, you can buy me a beer in return
+* Marc Müller-Weinhardt
+* ----------------------------------------------------------------------------
+*/
+
 #include <X11/Xlib.h>
 #include <X11/Xutil.h>
 #include <X11/Xresource.h>
@@ -20,15 +30,14 @@ void t_mmover(){
   int x_move = 100;
 
   // open the main display (this should work on most systems)
-  // main loop
   Display *display = XOpenDisplay(":0.0");
-  while(t_mmover_running){
+  while(t_mmover_running){  // main loop
     XWarpPointer(display, None, None, 0,0,0,0,x_move,0); // actual move
-    XFlush(display); // flush display to make changes, if not flushed, sleep will interfere
-    x_move *= -1; // change direction for next move
+    XFlush(display);        // flush display to make changes visible
+    x_move *= -1;           // change direction for next move
     nanosleep(&times,NULL); // sleep thread
   }
-  XCloseDisplay(display); // finish and clean
+  XCloseDisplay(display);   // finish and clean
 
 }
 
@@ -37,31 +46,13 @@ main(){
   pthread_t tid;
   pthread_create(&tid, NULL, (void * (*)(void *))t_mmover, NULL);
 
-  // kill loop in mover thread
-  printf("press any key to quit\n");
-  getc(stdin);
-  t_mmover_running = 0;
 
-  //
-  pthread_join(tid, NULL); // wait for thread to exit  finish
+  printf("press any key to quit\n");
+  getc(stdin);             // wait for user interaction
+  t_mmover_running = 0;    // stop main loop in thread
+
+  pthread_join(tid, NULL); // wait for thread to finish
 
 
   return 0;
 }
-
-  /*
-  running = 1;
-
-  pid_t pid = fork();
-  if(pid < 0 ){ // fail
-    printf("fork failure\n");
-    return 1;
-  } else if (pid) { // parent process
-    printf("press any key to quit\n");
-    getc(stdin);
-    running = 0;
-  } else { // child
-
-  }
-
-  */
