@@ -21,7 +21,7 @@
 
 int t_mmover_running = 1;
 
-void t_mmover(){
+void* t_mmover(){
   // time structure used for nanosleep function
   struct timespec times;
   times.tv_sec=1;   // seconds to sleep
@@ -38,15 +38,13 @@ void t_mmover(){
     nanosleep(&times,NULL); // sleep thread
   }
   XCloseDisplay(display);   // finish and clean
-
+  return NULL;
 }
 
-main(){
+int main(){
   // call mouse mover function in new thread
   pthread_t tid;
-  pthread_create(&tid, NULL, (void * (*)(void *))t_mmover, NULL);
-
-
+  pthread_create(&tid, NULL, (void* (*)(void*))t_mmover, NULL);
   printf("press any key to quit\n");
   getc(stdin);             // wait for user interaction
   t_mmover_running = 0;    // stop main loop in thread
