@@ -41,7 +41,7 @@ void t_mmover(){
 
 }
 
-main(){
+int main(int argc, char* argv[]){
   // call mouse mover function in new thread
   pthread_t tid;
   pthread_create(&tid, NULL, (void * (*)(void *))t_mmover, NULL);
