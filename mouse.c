@@ -41,12 +41,10 @@ void t_mmover(){
 
 }
 
-int main(int argc, char* argv[]){
+int main(){
   // call mouse mover function in new thread
   pthread_t tid;
-  pthread_create(&tid, NULL, (void * (*)(void *))t_mmover, NULL);
-
-
+  pthread_create(&tid, NULL, (void *)t_mmover, NULL);
   printf("press any key to quit\n");
   getc(stdin);             // wait for user interaction
   t_mmover_running = 0;    // stop main loop in thread
